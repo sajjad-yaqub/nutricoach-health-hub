@@ -11,6 +11,8 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ userId, onCo
   const [step, setStep] = useState(1);
   const [name, setName] = useState('');
   const [sex, setSex] = useState<'Male' | 'Female'>('Male');
+  const [genderDisplay, setGenderDisplay] = useState<'Male' | 'Female' | 'Other'>('Male');
+  const [bmrModel, setBmrModel] = useState<'Male' | 'Female' | null>(null);
   const [age, setAge] = useState<string>('');
   const [height, setHeight] = useState<string>('');
   const [weight, setWeight] = useState<string>('');
@@ -273,25 +275,75 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ userId, onCo
           </div>
         )}
 
-        {/* STEP 3: SEX BUTTONS */}
+        {/* STEP 3: GENDER SELECTION */}
         {step === 3 && (
           <div className="flex flex-col gap-5">
             <h2 className="text-2xl font-bold font-heading text-slate-800">Gender?</h2>
-            <p className="text-xs text-slate-400 -mt-3">Needed for precise metabolic rate equations.</p>
-            <div className="grid grid-cols-2 gap-4">
+            <p className="text-xs text-slate-400 -mt-3">Choose the option that fits you best.</p>
+            <div className="flex flex-col gap-3">
               <button
-                onClick={() => { setSex('Male'); setStep(4); }}
-                className={`py-6 rounded-2xl font-bold border transition duration-200 text-lg shadow-sm ${sex === 'Male' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-emerald-100 bg-white text-slate-500 hover:border-emerald-200 hover:bg-slate-50/50'}`}
+                onClick={() => { 
+                  setGenderDisplay('Male'); 
+                  setSex('Male'); 
+                  setStep(4); 
+                }}
+                className={`py-5 px-6 rounded-2xl font-bold border transition duration-200 text-left shadow-sm flex items-center justify-between ${genderDisplay === 'Male' ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-emerald-100 bg-white text-slate-500 hover:border-emerald-200 hover:bg-slate-50/50'}`}
               >
-                Male
+                <span>Male</span>
+                {genderDisplay === 'Male' && <Check size={18} className="text-emerald-600" />}
               </button>
               <button
-                onClick={() => { setSex('Female'); setStep(4); }}
-                className={`py-6 rounded-2xl font-bold border transition duration-200 text-lg shadow-sm ${sex === 'Female' ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-emerald-100 bg-white text-slate-500 hover:border-emerald-200 hover:bg-slate-50/50'}`}
+                onClick={() => { 
+                  setGenderDisplay('Female'); 
+                  setSex('Female'); 
+                  setStep(4); 
+                }}
+                className={`py-5 px-6 rounded-2xl font-bold border transition duration-200 text-left shadow-sm flex items-center justify-between ${genderDisplay === 'Female' ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-emerald-100 bg-white text-slate-500 hover:border-emerald-200 hover:bg-slate-50/50'}`}
               >
-                Female
+                <span>Female</span>
+                {genderDisplay === 'Female' && <Check size={18} className="text-emerald-600" />}
+              </button>
+              <button
+                onClick={() => { 
+                  setGenderDisplay('Other'); 
+                }}
+                className={`py-5 px-6 rounded-2xl font-bold border transition duration-200 text-left shadow-sm flex items-center justify-between ${genderDisplay === 'Other' ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-emerald-100 bg-white text-slate-500 hover:border-emerald-200 hover:bg-slate-50/50'}`}
+              >
+                <span>Non-binary / Other</span>
+                {genderDisplay === 'Other' && <Check size={18} className="text-emerald-600" />}
               </button>
             </div>
+
+            {genderDisplay === 'Other' && (
+              <div className="mt-2 p-5 rounded-2xl bg-emerald-50/40 border border-emerald-100/60 flex flex-col gap-3 slide-up">
+                <span className="font-bold text-[10px] text-emerald-800 uppercase tracking-wider block">Metabolic Calculation Model</span>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Standard metabolic formulas (BMR) require a biological baseline for skeletal muscle and hormone defaults. Please choose the calculation model that aligns closest to your physiology:
+                </p>
+                <div className="grid grid-cols-2 gap-3 mt-1">
+                  <button
+                    onClick={() => { 
+                      setBmrModel('Female'); 
+                      setSex('Female'); 
+                      setStep(4); 
+                    }}
+                    className={`py-3 rounded-xl font-bold border text-xs transition duration-200 ${bmrModel === 'Female' ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-emerald-100 bg-white text-slate-500 hover:border-emerald-200 hover:bg-slate-50/50'}`}
+                  >
+                    Female Model
+                  </button>
+                  <button
+                    onClick={() => { 
+                      setBmrModel('Male'); 
+                      setSex('Male'); 
+                      setStep(4); 
+                    }}
+                    className={`py-3 rounded-xl font-bold border text-xs transition duration-200 ${bmrModel === 'Male' ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-emerald-100 bg-white text-slate-500 hover:border-emerald-200 hover:bg-slate-50/50'}`}
+                  >
+                    Male Model
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
