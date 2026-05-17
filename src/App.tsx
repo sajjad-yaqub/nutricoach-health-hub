@@ -315,7 +315,7 @@ export default function App() {
 
   // D. LOGGED IN + ONBOARDING COMPLETE → RENDER EXPANSIVE PREMIUM RESPONSIVE SHELL
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row overflow-hidden select-none">
+    <div className="h-[100dvh] bg-slate-50 flex flex-col md:flex-row overflow-hidden select-none">
       
       {/* TOAST SYSTEM ALERTS FEED */}
       <div className="absolute top-4 right-4 z-[300] flex flex-col gap-2 pointer-events-none w-full max-w-sm">
