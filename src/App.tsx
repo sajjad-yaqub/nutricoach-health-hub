@@ -10,9 +10,10 @@ import { Dashboard } from './components/Dashboard';
 import { ChatPage } from './components/ChatPage';
 import { ReportsPage } from './components/ReportsPage';
 import { ProfilePage } from './components/ProfilePage';
+import { WeeklyPlanner } from './components/WeeklyPlanner';
 
 // Icon Imports
-import { LayoutDashboard, MessageSquare, LineChart, User, Flame, Sparkles } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, LineChart, User, Flame, Sparkles, CalendarRange } from 'lucide-react';
 
 interface Toast {
   id: string;
@@ -31,7 +32,7 @@ export default function App() {
   const [monthlySummaries, setMonthlySummaries] = useState<MonthlySummary[]>([]);
 
   // Navigation & Routing States
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'chat' | 'reports' | 'profile'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'chat' | 'planner' | 'reports' | 'profile'>('dashboard');
   const [activeChatId, setActiveChatId] = useState<string | undefined>(undefined);
   const [appLoading, setAppLoading] = useState(true);
   const [btnLoading, setBtnLoading] = useState(false);
@@ -298,6 +299,16 @@ export default function App() {
             weightLogs={weightLogs}
           />
         );
+      case 'planner':
+        return (
+          <WeeklyPlanner
+            profile={profile}
+            goals={goals}
+            dailySummaries={dailySummaries}
+            onRefreshData={refreshData}
+            onAddToast={addToast}
+          />
+        );
       case 'profile':
         return (
           <ProfilePage
@@ -383,6 +394,19 @@ export default function App() {
             <span>AI Coach</span>
           </button>
 
+          {/* Planner Tab */}
+          <button
+            onClick={() => handleTabNavigation('planner')}
+            className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-xs font-bold transition duration-150 ${
+              activeTab === 'planner'
+                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-700/20'
+                : 'text-emerald-100/70 hover:text-white hover:bg-emerald-850/50'
+            }`}
+          >
+            <CalendarRange size={18} className={activeTab === 'planner' ? 'stroke-[2.5px]' : ''} />
+            <span>Plan My Week</span>
+          </button>
+
           {/* Reports Tab */}
           <button
             onClick={() => handleTabNavigation('reports')}
@@ -444,7 +468,7 @@ export default function App() {
         3. MAIN WORKSPACE VIEWPORT PANEL (Flexible card canvas)
         ========================================================
       */}
-      <main className="flex-1 flex flex-col overflow-hidden bg-slate-50 relative">
+      <main className="flex-1 flex flex-col overflow-hidden bg-slate-50 relative pb-20 md:pb-0">
         {/* Max content centering box on desktop for clean visual hierarchy */}
         <div className="flex-1 flex flex-col overflow-hidden w-full max-w-5xl mx-auto md:px-6 md:py-4">
           <div className="flex-1 flex flex-col overflow-hidden bg-white md:rounded-3xl md:border md:border-slate-100 md:shadow-sm">
@@ -458,7 +482,7 @@ export default function App() {
         4. MOBILE STYLE BOTTOM TAB NAVIGATION BAR (Show only on mobile)
         ========================================================
       */}
-      <nav className="flex md:hidden bg-white/95 backdrop-blur-md border-t border-slate-100/80 px-5 py-4 pb-5 justify-between items-center z-50 shrink-0 select-none shadow-[0_-8px_30px_rgb(0,0,0,0.02)] nav-bar-container">
+      <nav className="fixed bottom-0 left-0 right-0 flex md:hidden bg-white/95 backdrop-blur-md border-t border-slate-100/80 px-5 py-3.5 pb-5 justify-between items-center z-50 select-none shadow-[0_-8px_30px_rgb(0,0,0,0.06)]">
         
         {/* Dashboard Icon */}
         <button
@@ -476,6 +500,15 @@ export default function App() {
         >
           <MessageSquare size={20} className={activeTab === 'chat' ? 'stroke-[2.5px]' : ''} />
           <span className="text-[9px] font-bold tracking-wider font-heading">Coach</span>
+        </button>
+
+        {/* Planner Icon */}
+        <button
+          onClick={() => handleTabNavigation('planner')}
+          className={`flex flex-col items-center gap-1 group active:scale-95 duration-100 ${activeTab === 'planner' ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`}
+        >
+          <CalendarRange size={20} className={activeTab === 'planner' ? 'stroke-[2.5px]' : ''} />
+          <span className="text-[9px] font-bold tracking-wider font-heading">Plan Week</span>
         </button>
 
         {/* Reports Icon */}

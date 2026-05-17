@@ -75,7 +75,8 @@ export const aiService = {
     profile: UserProfile,
     goals: UserGoal,
     runningTotals: { calories: number; protein: number; carbs: number; fat: number; fiber: number; water: number },
-    recentContext: string[] = []
+    recentContext: string[] = [],
+    imageParts?: { mimeType: string; data: string }[]
   ): Promise<{
     reply: string;
     extractedNutrition?: { calories: number; protein: number; carbs: number; fat: number; fiber: number; water: number };
@@ -89,7 +90,15 @@ export const aiService = {
       try {
         const systemPrompt = `You are NutriCoach, a friendly personal AI nutrition coach. Help users track nutrition through natural conversation.
 
-When user mentions food eaten:
+CRITICAL FORMATTING & DEMOGRAPHIC INSTRUCTIONS:
+1. NO ASTERISKS: Do not use any single (*) or double (**) asterisks in your response for markdown bolding or emphasis. For bold headers, simply use ALL CAPS or clear spacing, followed by plain text. No asterisks should appear in your output text under any circumstances.
+2. INDIAN URBAN / SEMI-URBAN LOCAL CONTEXT: Keep your nutritional suggestions, meal logs, recipes, and dietary coaching highly relevant to the Indian urban and semi-urban demographic.
+   - Recommend traditional, staple Indian foods (e.g. roti, steamed rice, cooked dals, chana, paneer, sprouts, besan chilla, idli, dosa, upma, poha, buttermilk/chaas, makhana, sattu, egg bhurji, chicken curry, local leafy greens/sabzis).
+   - Steer clear of Western/exotic suggestions like avocado toast, quinoa, kale, berries, salmon, or expensive high-end protein supplements unless explicitly asked by the user.
+   - Tailor protein suggestions to standard Indian vegetarian and non-vegetarian patterns (e.g., mixing cereals and pulses, sattu water, paneer, dahi, soya, egg whites, lean chicken breast).
+   - Use standard local metrics when helpful (e.g., katori/bowl, cup, glass) alongside metric units.
+
+When user mentions food eaten or uploads a food photo:
 - Estimate nutritional values from your knowledge
 - Show a formatted breakdown with emojis and emoji progress bars like ████░░░░░░ 40%
 - Show running daily totals vs their goals
@@ -130,6 +139,18 @@ Today's running totals: Calories ${runningTotals.calories} kcal, Protein ${runni
 Recent context (AI notes from previous days):
 ${recentContext.length > 0 ? recentContext.map((note, idx) => `Day -${idx + 1}: ${note}`).join('\n') : 'No recent notes.'}`;
 
+        const parts: any[] = [{ text: message }];
+        if (imageParts && imageParts.length > 0) {
+          imageParts.forEach(img => {
+            parts.push({
+              inlineData: {
+                mime_type: img.mimeType,
+                data: img.data
+              }
+            });
+          });
+        }
+
         const response = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
           {
@@ -137,7 +158,7 @@ ${recentContext.length > 0 ? recentContext.map((note, idx) => `Day -${idx + 1}: 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               contents: [
-                { role: 'user', parts: [{ text: message }] }
+                { role: 'user', parts: parts }
               ],
               systemInstruction: {
                 parts: [{ text: systemPrompt }]

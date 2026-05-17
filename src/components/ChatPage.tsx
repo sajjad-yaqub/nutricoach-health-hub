@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { UserProfile, UserGoal, DailySummary, ChatSession, Message, WeightLog } from '../types';
 import { dbService } from '../services/db';
 import { aiService } from '../services/ai';
-import { ArrowLeft, MessageSquare, Plus, Send, Zap, ChevronRight, Activity } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Plus, Send, Zap, ChevronRight, Activity, Camera } from 'lucide-react';
 
 interface ChatPageProps {
   profile: UserProfile;
@@ -10,7 +10,7 @@ interface ChatPageProps {
   dailySummaries: DailySummary[];
   chatSessions: ChatSession[];
   activeSessionId?: string; // Optional passed session to load
-  onNavigateToTab: (tab: 'dashboard' | 'chat' | 'reports' | 'profile') => void;
+  onNavigateToTab: (tab: 'dashboard' | 'chat' | 'planner' | 'reports' | 'profile') => void;
   onRefreshData: () => Promise<void>;
   onAddToast: (msg: string, type: 'success' | 'error') => void;
 }
@@ -29,6 +29,24 @@ export const ChatPage: React.FC<ChatPageProps> = ({
   const [inputText, setInputText] = useState('');
   const [isAiTyping, setIsAiTyping] = useState(false);
   const [currentSession, setCurrentSession] = useState<ChatSession | null>(null);
+  
+  // Photo food logging states
+  const [selectedImage, setSelectedImage] = useState<{ base64: string; mimeType: string } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = (reader.result as string).split(',')[1];
+      setSelectedImage({
+        base64: base64String,
+        mimeType: file.type
+      });
+    };
+    reader.readAsDataURL(file);
+  };
   
   // Running daily summary counts accumulated in current session
   const [sessionNutrition, setSessionNutrition] = useState({
@@ -269,18 +287,24 @@ export const ChatPage: React.FC<ChatPageProps> = ({
   // 4. Send Message Handler
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputText.trim() || !currentSession) return;
+    if (!inputText.trim() && !selectedImage) return;
+    if (!currentSession) return;
 
-    const userText = inputText.trim();
+    const userText = inputText.trim() || 'Analyze this meal photo';
     setInputText('');
 
     // Append user message immediately
-    const userMessage: Message = {
+    const userMessage: Message & { image?: string } = {
       id: 'msg-' + Date.now(),
       sender: 'user',
       text: userText,
       timestamp: new Date().toISOString(),
+      image: selectedImage ? `data:${selectedImage.mimeType};base64,${selectedImage.base64}` : undefined
     };
+
+    // Capture the photo parts before resetting state
+    const imgParts = selectedImage ? [{ mimeType: selectedImage.mimeType, data: selectedImage.base64 }] : undefined;
+    setSelectedImage(null);
 
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
@@ -293,7 +317,8 @@ export const ChatPage: React.FC<ChatPageProps> = ({
         profile,
         goals,
         sessionNutrition,
-        dailySummaries.slice(-3).map(s => s.ai_notes || '')
+        dailySummaries.slice(-3).map(s => s.ai_notes || ''),
+        imgParts
       );
 
       // Append AI message
@@ -416,6 +441,12 @@ export const ChatPage: React.FC<ChatPageProps> = ({
                   : 'bg-white text-slate-800 border border-slate-100 self-start rounded-bl-none'
               }`}
             >
+              {/* Formatted photo thumbnail for food logs */}
+              {(msg as any).image && (
+                <div className="mb-2.5 max-w-full rounded-xl overflow-hidden border border-white/20 shadow-inner">
+                  <img src={(msg as any).image} className="w-full max-h-48 object-cover" alt="Meal Log Photo" />
+                </div>
+              )}
               {/* Formatted body text (handles simple markdown-like newlines and list items) */}
               <div className="whitespace-pre-line font-sans">
                 {msg.text}
@@ -461,7 +492,43 @@ export const ChatPage: React.FC<ChatPageProps> = ({
           </div>
         )}
 
+        {selectedImage && (
+          <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-3 animate-fade-in relative shadow-inner">
+            <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-slate-200">
+              <img src={`data:${selectedImage.mimeType};base64,${selectedImage.base64}`} className="w-full h-full object-cover" alt="Preview" />
+              <button
+                type="button"
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-1 -right-1 w-5 h-5 bg-slate-800 text-white rounded-full flex items-center justify-center text-[10px] hover:bg-slate-900 border border-white shadow active:scale-95 duration-100"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] font-bold text-slate-700">📸 Food photo attached</div>
+              <div className="text-[9px] text-slate-400 truncate">Tap send to estimate calories & nutrients.</div>
+            </div>
+          </div>
+        )}
+
         <form onSubmit={handleSendMessage} className="flex gap-2.5 items-end">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageSelect}
+            accept="image/*"
+            className="hidden"
+          />
+          
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="w-11 h-11 border border-slate-200 hover:border-emerald-200 hover:bg-emerald-50 text-slate-400 hover:text-emerald-600 rounded-2xl flex items-center justify-center transition active:scale-95 duration-100 shrink-0"
+            title="Attach a photo of your meal"
+          >
+            <Camera size={18} />
+          </button>
+
           <textarea
             value={inputText}
             onChange={e => setInputText(e.target.value)}
@@ -471,7 +538,7 @@ export const ChatPage: React.FC<ChatPageProps> = ({
                 handleSendMessage(e);
               }
             }}
-            placeholder="Type meal log, water volume, weight..."
+            placeholder="Log meal, water, weight or attach photo..."
             className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-xs text-slate-800 placeholder-slate-400 outline-none resize-none focus:border-emerald-500 transition duration-150 min-h-[44px] max-h-[100px] leading-relaxed"
             rows={1}
           />
