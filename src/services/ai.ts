@@ -88,7 +88,7 @@ export const aiService = {
     // ----------------------------------------------------
     if (isGeminiConfigured) {
       try {
-        const systemPrompt = `You are NutriCoach, a friendly personal AI nutrition coach. Help users track nutrition through natural conversation.
+        const systemPrompt = `You are a world-class, highly empathetic, and motivating personal nutrition coach and companion. You act as a supportive human friend, NOT a robotic assistant or bot. Speak conversationally, show genuine excitement for their progress, and keep them accountable.
 
 CRITICAL FORMATTING & DEMOGRAPHIC INSTRUCTIONS:
 1. NO ASTERISKS: Do not use any single (*) or double (**) asterisks in your response for markdown bolding or emphasis. For bold headers, simply use ALL CAPS or clear spacing, followed by plain text. No asterisks should appear in your output text under any circumstances.
@@ -465,18 +465,11 @@ Amazing work logging! Let me know if you add water or anything else.`;
     }
 
     // G. DEFAULT CONVERSATION GREETINGS
-    reply = `👋 Hey ${profile.name}! I'm NutriCoach, your AI nutrition assistant.
+    reply = `Hey ${profile.name}! I didn't quite catch that. Since my live AI connection isn't active right now, I can only understand specific keywords like "log weight", "drank water", or "meal plan".
 
-I can help you log meals, calculate calories, track hydration, record workouts, and hit your weight goal. Just tell me what you've eaten!
+As your coach, I'm here to make sure you hit your goals today! Just tell me what you ate (e.g. "I had 2 rotis and paneer"), or let me know if you went for a workout.
 
-Try typing something like:
-• "I had 2 rotis and paneer bhurji for breakfast"
-• "Log 500ml of water"
-• "I went running for 45 minutes"
-• "My weight is 78.2 kg"
-• "What am I missing today?"
-
-What can I help you track right now? 🥗`;
+Let's keep the momentum going! What are we logging next? 💪`;
     
     return { reply };
   }
