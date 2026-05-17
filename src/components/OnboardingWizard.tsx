@@ -276,7 +276,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ userId, onCo
         {/* STEP 3: SEX BUTTONS */}
         {step === 3 && (
           <div className="flex flex-col gap-5">
-            <h2 className="text-2xl font-bold font-heading text-slate-800">Biological sex?</h2>
+            <h2 className="text-2xl font-bold font-heading text-slate-800">Gender?</h2>
             <p className="text-xs text-slate-400 -mt-3">Needed for precise metabolic rate equations.</p>
             <div className="grid grid-cols-2 gap-4">
               <button
