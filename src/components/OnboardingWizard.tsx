@@ -199,9 +199,9 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ userId, onCo
       };
 
       await onComplete(profileObj, calculatedGoals);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      setErrorMsg('Something went wrong saving your settings. Please try again.');
+      setErrorMsg(e?.message || 'Something went wrong saving your settings. Please try again.');
       setIsSubmitting(false);
     }
   };

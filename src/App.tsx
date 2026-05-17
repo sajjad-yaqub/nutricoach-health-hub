@@ -210,6 +210,7 @@ export default function App() {
     } catch (err) {
       console.error(err);
       addToast('Failed to complete onboarding setups.', 'error');
+      throw err;
     }
   };
 
