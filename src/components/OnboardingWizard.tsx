@@ -399,7 +399,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ userId, onCo
             <h2 className="text-2xl font-bold font-heading text-slate-800">Dietary preferences?</h2>
             <p className="text-xs text-slate-400 -mt-3">Multi-select. Select "None" if you eat everything.</p>
             <div className="grid grid-cols-2 gap-3">
-              {['Vegetarian', 'Vegan', 'Gluten-Free', 'Dairy-Free', 'None'].map(pref => {
+              {['Vegetarian', 'Vegan', 'Gluten-Free', 'Dairy-Free', 'Halal', 'None'].map(pref => {
                 const isSelected = dietaryPreferences.includes(pref);
                 return (
                   <button
