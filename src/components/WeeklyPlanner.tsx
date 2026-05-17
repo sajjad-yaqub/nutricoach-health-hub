@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { UserProfile, UserGoal, DailySummary } from '../types';
 import { dbService } from '../services/db';
-import { aiService } from '../services/ai';
+import { aiService, isGeminiConfigured } from '../services/ai';
 import { 
   Calendar, 
   Sparkles, 
@@ -102,7 +102,7 @@ export const WeeklyPlanner: React.FC<WeeklyPlannerProps> = ({
     onAddToast('Curating your personal Indian urban meal plan... 🍛', 'success');
     
     try {
-      if (aiService.isGeminiConfigured) {
+      if (isGeminiConfigured) {
         // Let's generate a highly customized prompt for Gemini
         const prompt = `Generate a comprehensive 7-day Indian urban weekly meal planner. 
 User Profile: Goal is ${profile.goal}, Sex is ${profile.sex}, Age is ${profile.age}, Weight is ${profile.weight_kg}kg.

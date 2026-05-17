@@ -227,7 +227,7 @@ export default function App() {
   };
 
   // Navigation tab handler
-  const handleTabNavigation = (tab: 'dashboard' | 'chat' | 'reports' | 'profile', activeId?: string) => {
+  const handleTabNavigation = (tab: 'dashboard' | 'chat' | 'planner' | 'reports' | 'profile', activeId?: string) => {
     setActiveChatId(activeId);
     setActiveTab(tab);
   };
