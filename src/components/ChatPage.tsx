@@ -166,7 +166,7 @@ export const ChatPage: React.FC<ChatPageProps> = ({
       ? `Good morning ${profile.name}! Yesterday you hit **${yesterdayPercent}%** of your goals. What did you have for breakfast today? 🍳`
       : `Good morning ${profile.name}! I'm NutriCoach, your personal AI. Tell me what you've had to eat or drink today! 🥗`;
 
-    const newSessionId = 'session-' + Date.now();
+    const newSessionId = crypto.randomUUID();
     const newSession: ChatSession = {
       id: newSessionId,
       user_id: profile.id,

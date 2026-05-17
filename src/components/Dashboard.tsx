@@ -53,8 +53,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
   useEffect(() => {
     const hours = new Date().getHours();
     
-    // Banner 1: No food logged by 2pm local time
-    if (calConsumed === 0 && hours >= 14) {
+    // Banner 1: No food logged by 10am local time
+    if (calConsumed === 0 && hours >= 10) {
       setActiveBanner('log_reminder');
       return;
     }
@@ -248,17 +248,29 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <X size={15} />
           </button>
           
-          {activeBanner === 'log_reminder' && (
-            <div className="flex gap-3">
-              <AlertCircle size={20} className="shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-bold text-sm font-heading">Hungry? 🥗</h4>
-                <p className="text-xs text-white/90 leading-relaxed mt-0.5">
-                  It's past 2:00 PM and you haven't logged any food yet. Don't forget to track your lunch with your AI Coach!
-                </p>
+          {activeBanner === 'log_reminder' && (() => {
+            const hour = new Date().getHours();
+            let meal = 'meal';
+            let timeStr = 'a while';
+            if (hour >= 20) { meal = 'dinner'; timeStr = '8:00 PM'; }
+            else if (hour >= 17) { meal = 'evening snack'; timeStr = '5:00 PM'; }
+            else if (hour >= 14) { meal = 'lunch'; timeStr = '2:00 PM'; }
+            else if (hour >= 10) { meal = 'breakfast'; timeStr = '10:00 AM'; }
+
+            return (
+              <div className="flex gap-3">
+                <AlertCircle size={20} className="shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-bold text-sm font-heading">Hungry? 🥗</h4>
+                  <p className="text-xs text-white/90 leading-relaxed mt-0.5">
+                    {timeStr === 'a while' 
+                      ? "You haven't logged any food yet today. Don't forget to track your meals with your AI Coach!"
+                      : `It's past ${timeStr} and you haven't logged any food yet. Don't forget to track your ${meal} with your AI Coach!`}
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {activeBanner === 'streak_celebration' && (
             <div className="flex gap-3">
