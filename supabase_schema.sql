@@ -134,77 +134,32 @@ ALTER TABLE weight_logs ENABLE ROW LEVEL SECURITY;
 -- ========================================================
 
 -- Policies for user_profiles
-CREATE POLICY "Users can view own profile" ON user_profiles
-    FOR SELECT TO authenticated USING (auth.uid() = id);
-
-CREATE POLICY "Users can insert own profile" ON user_profiles
-    FOR INSERT TO authenticated WITH CHECK (auth.uid() = id);
-
-CREATE POLICY "Users can update own profile" ON user_profiles
-    FOR UPDATE TO authenticated USING (auth.uid() = id);
+CREATE POLICY "Users can manage own profile" ON user_profiles
+    FOR ALL USING (auth.uid() = id);
 
 -- Policies for user_goals
-CREATE POLICY "Users can view own goals" ON user_goals
-    FOR SELECT TO authenticated USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert own goals" ON user_goals
-    FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update own goals" ON user_goals
-    FOR UPDATE TO authenticated USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage own goals" ON user_goals
+    FOR ALL USING (auth.uid() = user_id);
 
 -- Policies for daily_summaries
-CREATE POLICY "Users can view own daily summaries" ON daily_summaries
-    FOR SELECT TO authenticated USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert own daily summaries" ON daily_summaries
-    FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update own daily summaries" ON daily_summaries
-    FOR UPDATE TO authenticated USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage own daily summaries" ON daily_summaries
+    FOR ALL USING (auth.uid() = user_id);
 
 -- Policies for weekly_summaries
-CREATE POLICY "Users can view own weekly summaries" ON weekly_summaries
-    FOR SELECT TO authenticated USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert own weekly summaries" ON weekly_summaries
-    FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update own weekly summaries" ON weekly_summaries
-    FOR UPDATE TO authenticated USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage own weekly summaries" ON weekly_summaries
+    FOR ALL USING (auth.uid() = user_id);
 
 -- Policies for monthly_summaries
-CREATE POLICY "Users can view own monthly summaries" ON monthly_summaries
-    FOR SELECT TO authenticated USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert own monthly summaries" ON monthly_summaries
-    FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update own monthly summaries" ON monthly_summaries
-    FOR UPDATE TO authenticated USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage own monthly summaries" ON monthly_summaries
+    FOR ALL USING (auth.uid() = user_id);
 
 -- Policies for chat_sessions
-CREATE POLICY "Users can view own chat sessions" ON chat_sessions
-    FOR SELECT TO authenticated USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert own chat sessions" ON chat_sessions
-    FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update own chat sessions" ON chat_sessions
-    FOR UPDATE TO authenticated USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can delete own chat sessions" ON chat_sessions
-    FOR DELETE TO authenticated USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage own chat sessions" ON chat_sessions
+    FOR ALL USING (auth.uid() = user_id);
 
 -- Policies for weight_logs
-CREATE POLICY "Users can view own weight logs" ON weight_logs
-    FOR SELECT TO authenticated USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert own weight logs" ON weight_logs
-    FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can delete own weight logs" ON weight_logs
-    FOR DELETE TO authenticated USING (auth.uid() = user_id);
+CREATE POLICY "Users can manage own weight logs" ON weight_logs
+    FOR ALL USING (auth.uid() = user_id);
 
 
 -- ========================================================
