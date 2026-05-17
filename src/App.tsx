@@ -64,7 +64,7 @@ export default function App() {
         }
 
         // Live Auth State Listener
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event: any, session: any) => {
           if (session?.user) {
             setUser(session.user);
             await loadUserData(session.user.id);

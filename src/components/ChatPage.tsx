@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { UserProfile, UserGoal, DailySummary, ChatSession, Message } from '../types';
+import { UserProfile, UserGoal, DailySummary, ChatSession, Message, WeightLog } from '../types';
 import { dbService } from '../services/db';
 import { aiService } from '../services/ai';
 import { ArrowLeft, MessageSquare, Plus, Send, Zap, ChevronRight, Activity } from 'lucide-react';
