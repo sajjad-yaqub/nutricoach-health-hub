@@ -1,0 +1,92 @@
+/* Custom Design System & Premium Styling for NutriCoach */
+
+/* Tailwind directives will be injected or imported here. 
+   We support both Tailwind CSS v3 and v4 templates. */
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Outfit', var(--font-sans);
+  }
+  
+  body {
+    font-family: var(--font-sans);
+    background-color: #f0fdf4; /* Emerald tint background */
+    color: #0f172a;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Micro-animations and custom transitions */
+.fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Custom premium pulse for skeleton loader */
+.skeleton-pulse {
+  animation: skeletonPulse 1.8s ease-in-out infinite;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+}
+
+@keyframes skeletonPulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Custom Scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Mobile-first responsive screen size locked bounds for desktop mockup preview */
+.mobile-preview-frame {
+  box-shadow: 0 25px 50px -12px rgba(4, 120, 87, 0.15);
+  border: 8px solid #0f172a;
+  border-radius: 40px;
+  overflow: hidden;
+  height: 812px;
+  width: 375px;
+  background-color: #ffffff;
+}
+
+/* Glassmorphism styling */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.glass-panel-dark {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
