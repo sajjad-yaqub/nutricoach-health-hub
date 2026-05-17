@@ -231,14 +231,14 @@ ${recentContext.length > 0 ? recentContext.map((note, idx) => `Day -${idx + 1}: 
       
       const diff = weight - profile.weight_kg;
       const trend = diff < 0 
-        ? `📉 That is a decrease of **${Math.abs(diff).toFixed(1)}kg**! Nice work moving towards your goal!`
+        ? `📉 That is a decrease of ${Math.abs(diff).toFixed(1)}kg! Nice work moving towards your goal!`
         : diff > 0 
-          ? `📈 That is an increase of **${diff.toFixed(1)}kg**. Don't worry about daily fluctuations, stay consistent!`
+          ? `📈 That is an increase of ${diff.toFixed(1)}kg. Don't worry about daily fluctuations, stay consistent!`
           : `⚖️ Holding steady! Consistency is key.`;
 
-      reply = `⚖️ **Weight Logged Successfully!**
+      reply = `⚖️ Weight Logged Successfully!
       
-I've recorded your weight as **${weight} kg** in your log history.
+I've recorded your weight as ${weight} kg in your log history.
 ${trend}
 
 Is there anything else you'd like to log today, or would you like some meal ideas?`;
@@ -267,11 +267,11 @@ Is there anything else you'd like to log today, or would you like some meal idea
       const totalWater = runningTotals.water + amount;
       const waterPct = (totalWater / goals.water_ml) * 100;
       
-      reply = `💧 **Hydration Logged!**
+      reply = `💧 Hydration Logged!
       
-I've added **${amount} ml** of water to your daily tracker. 
+I've added ${amount} ml of water to your daily tracker. 
 
-**Today's Hydration Progress:**
+Today's Hydration Progress:
 💧 Total Water: ${totalWater} ml / ${goals.water_ml} ml
 📊 Progress: ${makeProgressBar(waterPct)}
 
@@ -305,12 +305,12 @@ Keep drinking! Staying hydrated speeds up your metabolism and aids recovery.`;
       
       extractedNutrition.calories = -caloriesBurned; // Burned is negative calorie intake
       
-      reply = `🏃‍♂️ **Workout Tracked!**
+      reply = `🏃‍♂️ Workout Tracked!
       
-Great job active coaching! You did **${matchedExercise || 'exercise'}** for **${durationMinutes} minutes**.
-🔥 Estimated Calories Burned: **${caloriesBurned} kcal** (using MET value of ${met})
+Great job active coaching! You did ${matchedExercise || 'exercise'} for ${durationMinutes} minutes.
+🔥 Estimated Calories Burned: ${caloriesBurned} kcal (using MET value of ${met})
 
-This has been added to your daily balance. Your remaining calorie allowance for today has increased by **${caloriesBurned} kcal** to fuel your recovery!
+This has been added to your daily balance. Your remaining calorie allowance for today has increased by ${caloriesBurned} kcal to fuel your recovery!
 
 Make sure to log a protein-rich snack to assist muscle repair! 💪`;
       return { reply, extractedNutrition };
@@ -326,26 +326,26 @@ Make sure to log a protein-rich snack to assist muscle repair! 💪`;
       const prefText = profile.dietary_preferences.includes('None') ? '' : ` (${profile.dietary_preferences.join(', ')})`;
       const condText = profile.health_conditions.includes('None') ? '' : ` keeping in mind your ${profile.health_conditions.join(', ')}`;
 
-      reply = `🥗 **Custom Daily Meal Plan**
-Here is a high-performance meal plan tailored specifically for your goal of **${profile.goal}**${prefText}${condText}:
+      reply = `🥗 Custom Daily Meal Plan
+Here is a high-performance meal plan tailored specifically for your goal of ${profile.goal}${prefText}${condText}:
 
-🌅 **Breakfast (25% - ~${bCalories} kcal):**
-• **High-Protein Oatmeal Bowl:** 50g Rolled Oats, 1 scoop Whey Protein, 100g Mixed Berries, 10g Almonds.
-• *Estimated macros:* ${Math.round(bCalories*0.9)} kcal | 35g Protein | 45g Carbs | 8g Fat | 8g Fiber.
+🌅 Breakfast (25% - ~${bCalories} kcal):
+• High-Protein Poha: 50g Poha (flattened rice), 30g Roasted Peanuts, 100g Paneer cubes, onion and mild spices.
+• Estimated macros: ${Math.round(bCalories*0.9)} kcal | 25g Protein | 45g Carbs | 12g Fat | 6g Fiber.
 
-☀️ **Lunch (35% - ~${lCalories} kcal):**
-• **Zesty Grilled Chicken/Tofu Salad:** 150g Grilled Chicken Breast (or Baked Firm Tofu), 150g Brown Rice, 2 cups baby spinach/cucumber salad with 1 tsp olive oil and lemon dressing.
-• *Estimated macros:* ${Math.round(lCalories*0.95)} kcal | 48g Protein | 55g Carbs | 12g Fat | 6g Fiber.
+☀️ Lunch (35% - ~${lCalories} kcal):
+• Roti, Dal & Sabzi: 2 Whole Wheat Rotis, 1 katori (150g) Yellow Dal/Moong Dal, 1 katori mixed veg sabzi (beans, carrots), and side cucumber salad.
+• Estimated macros: ${Math.round(lCalories*0.95)} kcal | 22g Protein | 65g Carbs | 14g Fat | 10g Fiber.
 
-🍎 **Snack (10% - ~${sCalories} kcal):**
-• **Greek Crunch:** 150g Low-fat Greek Yogurt topped with 100g sliced Apple and a sprinkle of cinnamon.
-• *Estimated macros:* ${Math.round(sCalories*0.85)} kcal | 16g Protein | 20g Carbs | 2g Fat | 3g Fiber.
+🍎 Snack (10% - ~${sCalories} kcal):
+• Roasted Makhana & Sattu: 1 small bowl roasted makhana (fox nuts) and 1 glass of Sattu water (roasted gram flour) with cumin and black salt.
+• Estimated macros: ${Math.round(sCalories*0.85)} kcal | 10g Protein | 25g Carbs | 4g Fat | 4g Fiber.
 
-🌙 **Dinner (30% - ~${dCalories} kcal):**
-• **Baked Salmon/Tempeh & Greens:** 120g Salmon fillet (or Baked Tempeh) with 1 medium Baked Sweet Potato and 1 cup of steamed broccoli.
-• *Estimated macros:* ${Math.round(dCalories*0.95)} kcal | 32g Protein | 38g Carbs | 15g Fat | 7g Fiber.
+🌙 Dinner (30% - ~${dCalories} kcal):
+• Khichdi & Raita: 1.5 katori Moong Dal Khichdi (rice and lentils cooked together) with 1 katori cucumber raita (yogurt).
+• Estimated macros: ${Math.round(dCalories*0.95)} kcal | 18g Protein | 45g Carbs | 8g Fat | 6g Fiber.
 
-*Would you like to log any of these meals, or adjust items based on your fridge?*`;
+Would you like to log any of these meals, or adjust items based on your fridge?`;
       return { reply };
     }
 
@@ -358,29 +358,29 @@ Here is a high-performance meal plan tailored specifically for your goal of **${
       
       let suggestions = [];
       if (remProtein > 20) {
-        suggestions.push(`🥩 **For Protein (${remProtein}g remaining):** Add 100g of grilled chicken breast (31g protein), a scoop of whey protein (25g), or 150g Greek yogurt (15g).`);
+        suggestions.push(`🥩 For Protein (${remProtein}g remaining): Add 100g of paneer bhurji (18g protein), a scoop of sattu (20g), or 150g dahi/curd (15g).`);
       }
       if (remFiber > 5) {
-        suggestions.push(`🥦 **For Fiber (${remFiber}g remaining):** Try 1 cup of steamed broccoli (4g fiber), 1 cup of raspberries (8g), or 2 slices of whole wheat bread (4g).`);
+        suggestions.push(`🥦 For Fiber (${remFiber}g remaining): Try 1 cup of steamed spinach/palak (4g fiber), roasted chana (8g), or 2 whole wheat rotis (4g).`);
       }
       if (remWater > 500) {
-        suggestions.push(`💧 **For Hydration (${remWater}ml remaining):** Drink 2 full glasses of water or a large bottle during your next session.`);
+        suggestions.push(`💧 For Hydration (${remWater}ml remaining): Drink 2 full glasses of water or a large bottle during your next session.`);
       }
 
       if (suggestions.length === 0) {
-        reply = `🎉 **Phenomenal job, ${profile.name}!**
+        reply = `🎉 Phenomenal job, ${profile.name}!
 You have practically hit all of your major macronutrient and hydration goals for today! 
 No glaring gaps found. Sit back, rest well, and let's repeat this victory tomorrow! 🚀`;
       } else {
-        reply = `🔍 **Your Nutrient Gaps & Quick Fixes**
+        reply = `🔍 Your Nutrient Gaps & Quick Fixes
 
 Here is what you are currently missing to hit 100% of your daily goals:
-• **Calories:** ${remCalories} kcal remaining
-• **Protein:** ${remProtein}g remaining
-• **Fiber:** ${remFiber}g remaining
-• **Water:** ${remWater}ml remaining
+• Calories: ${remCalories} kcal remaining
+• Protein: ${remProtein}g remaining
+• Fiber: ${remFiber}g remaining
+• Water: ${remWater}ml remaining
 
-💡 **Food suggestions to fill your gaps:**
+💡 Food suggestions to fill your gaps:
 ${suggestions.join('\n\n')}
 
 What would you like to log next?`;
@@ -439,42 +439,42 @@ What would you like to log next?`;
       const proPct = (currentPro / goals.protein_g) * 100;
       const fibPct = (currentFib / goals.fiber_g) * 100;
 
-      const itemsLoggedList = foundFoods.map(f => `• **${f.qty}x ${f.name}** (${f.qty > 1 ? `${f.qty} servings` : f.serving})`).join('\n');
-      const breakdownList = foundFoods.map(f => `🍽️ **${f.name}**\n  🔥 ${f.calories} kcal | 🥩 ${f.protein}g Protein | 🍞 ${f.carbs}g Carbs | 🥑 ${f.fat}g Fat | 🥦 ${f.fiber}g Fiber`).join('\n\n');
+      const itemsLoggedList = foundFoods.map(f => `• ${f.qty}x ${f.name} (${f.qty > 1 ? `${f.qty} servings` : f.serving})`).join('\n');
+      const breakdownList = foundFoods.map(f => `🍽️ ${f.name}\n  🔥 ${f.calories} kcal | 🥩 ${f.protein}g Protein | 🍞 ${f.carbs}g Carbs | 🥑 ${f.fat}g Fat | 🥦 ${f.fiber}g Fiber`).join('\n\n');
 
-      reply = `🍽️ **Logged meals!**
+      reply = `🍽️ Logged meals!
 
 I have estimated the nutritional values and added these to your log:
 ${itemsLoggedList}
 
-📊 **Meal Breakdown:**
+📊 Meal Breakdown:
 ${breakdownList}
 
 ---
 
-📈 **Updated Daily Running Totals:**
-• **Calories:** ${currentCal} / ${goals.calories} kcal
+📈 Updated Daily Running Totals:
+• Calories: ${currentCal} / ${goals.calories} kcal
   ${makeProgressBar(calPct)}
-• **Protein:** ${currentPro} / ${goals.protein_g}g
+• Protein: ${currentPro} / ${goals.protein_g}g
   ${makeProgressBar(proPct)}
-• **Fiber:** ${currentFib} / ${goals.fiber_g}g
+• Fiber: ${currentFib} / ${goals.fiber_g}g
   ${makeProgressBar(fibPct)}
 
-*Amazing work logging! Let me know if you add water or anything else.*`;
+Amazing work logging! Let me know if you add water or anything else.`;
       return { reply, extractedNutrition };
     }
 
     // G. DEFAULT CONVERSATION GREETINGS
-    reply = `👋 **Hey ${profile.name}!** I'm NutriCoach, your AI nutrition assistant.
+    reply = `👋 Hey ${profile.name}! I'm NutriCoach, your AI nutrition assistant.
 
 I can help you log meals, calculate calories, track hydration, record workouts, and hit your weight goal. Just tell me what you've eaten!
 
 Try typing something like:
-• *"I had 2 eggs and oatmeal for breakfast"*
-• *"Log 500ml of water"*
-• *"I went running for 45 minutes"*
-• *"My weight is 78.2 kg"*
-• *"What am I missing today?"*
+• "I had 2 rotis and paneer bhurji for breakfast"
+• "Log 500ml of water"
+• "I went running for 45 minutes"
+• "My weight is 78.2 kg"
+• "What am I missing today?"
 
 What can I help you track right now? 🥗`;
     
