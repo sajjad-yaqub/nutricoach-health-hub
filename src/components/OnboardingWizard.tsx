@@ -236,8 +236,8 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ userId, onCo
         {/* STEP 1: WELCOME SCREEN */}
         {step === 1 && (
           <div className="text-center flex flex-col items-center gap-6">
-            <div className="w-18 h-18 bg-emerald-100/80 text-emerald-600 border border-emerald-200/30 rounded-3xl flex items-center justify-center shadow-md shadow-emerald-600/10 mb-2 animate-bounce">
-              <Sparkles size={36} />
+            <div className="w-18 h-18 bg-emerald-100/80 text-emerald-600 border border-emerald-200/30 rounded-3xl flex items-center justify-center shadow-md shadow-emerald-600/10 mb-2 animate-float">
+              <Apple size={36} />
             </div>
             <h1 className="text-3xl font-extrabold tracking-tight font-heading leading-tight text-slate-800">
               Let's build your <br />
