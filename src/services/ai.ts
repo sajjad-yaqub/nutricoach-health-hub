@@ -76,7 +76,8 @@ export const aiService = {
     goals: UserGoal,
     runningTotals: { calories: number; protein: number; carbs: number; fat: number; fiber: number; water: number },
     recentContext: string[] = [],
-    imageParts?: { mimeType: string; data: string }[]
+    imageParts?: { mimeType: string; data: string }[],
+    chatHistory?: { role: string; text: string }[]
   ): Promise<{
     reply: string;
     extractedNutrition?: { calories: number; protein: number; carbs: number; fat: number; fiber: number; water: number };
@@ -88,7 +89,10 @@ export const aiService = {
     // ----------------------------------------------------
     if (isGeminiConfigured) {
       try {
+        const timeNow = new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' });
         const systemPrompt = `You are a world-class, highly empathetic, and motivating personal nutrition coach and companion. You act as a supportive human friend, NOT a robotic assistant or bot. Speak conversationally, show genuine excitement for their progress, and keep them accountable.
+
+The user's current local time is ${timeNow}. Always consider this time of day when suggesting meals (e.g., don't suggest breakfast at 8 PM).
 
 CRITICAL FORMATTING & DEMOGRAPHIC INSTRUCTIONS:
 1. NO ASTERISKS: Do not use any single (*) or double (**) asterisks in your response for markdown bolding or emphasis. For bold headers, simply use ALL CAPS or clear spacing, followed by plain text. No asterisks should appear in your output text under any circumstances.
@@ -139,7 +143,13 @@ Today's running totals: Calories ${runningTotals.calories} kcal, Protein ${runni
 Recent context (AI notes from previous days):
 ${recentContext.length > 0 ? recentContext.map((note, idx) => `Day -${idx + 1}: ${note}`).join('\n') : 'No recent notes.'}`;
 
-        const parts: any[] = [{ text: message }];
+        const parts: any[] = [];
+        if (chatHistory && chatHistory.length > 0) {
+          parts.push({ text: "PREVIOUS CHAT HISTORY:\n" + chatHistory.map(m => `${m.role.toUpperCase()}: ${m.text}`).join("\n\n") + "\n\nCURRENT MESSAGE:\n" + message });
+        } else {
+          parts.push({ text: message });
+        }
+
         if (imageParts && imageParts.length > 0) {
           imageParts.forEach(img => {
             parts.push({
@@ -179,7 +189,7 @@ ${recentContext.length > 0 ? recentContext.map((note, idx) => `Day -${idx + 1}: 
         const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
         // Extract JSON log block if present
-        let reply = rawText;
+        let reply = rawText.replace(/\*/g, '');
         let extractedNutrition;
         let extractedWeight;
 

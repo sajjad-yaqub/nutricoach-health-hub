@@ -311,6 +311,11 @@ export const ChatPage: React.FC<ChatPageProps> = ({
     setIsAiTyping(true);
 
     try {
+      const historyForAI = messages.slice(-10).map(m => ({
+        role: m.sender,
+        text: m.text
+      }));
+
       // Call AI coaching response builder
       const aiResponse = await aiService.getResponse(
         userText,
@@ -318,7 +323,8 @@ export const ChatPage: React.FC<ChatPageProps> = ({
         goals,
         sessionNutrition,
         dailySummaries.slice(-3).map(s => s.ai_notes || ''),
-        imgParts
+        imgParts,
+        historyForAI
       );
 
       // Append AI message
@@ -332,12 +338,14 @@ export const ChatPage: React.FC<ChatPageProps> = ({
       const finalMessages = [...updatedMessages, aiMessage];
       setMessages(finalMessages);
 
+      let finalNutrition = sessionNutrition;
+
       // If nutrition totals were extracted by the AI
       if (aiResponse.extractedNutrition) {
         const extraNutr = aiResponse.extractedNutrition;
         
         // Update session tracking totals
-        const newNutrition = {
+        finalNutrition = {
           calories: Math.max(0, sessionNutrition.calories + extraNutr.calories),
           protein: Number((sessionNutrition.protein + extraNutr.protein).toFixed(1)),
           carbs: Number((sessionNutrition.carbs + extraNutr.carbs).toFixed(1)),
@@ -346,7 +354,7 @@ export const ChatPage: React.FC<ChatPageProps> = ({
           water: Math.max(0, sessionNutrition.water + extraNutr.water),
         };
         
-        setSessionNutrition(newNutrition);
+        setSessionNutrition(finalNutrition);
 
         // Success toast if anything meaningful was logged
         if (extraNutr.calories > 0 || extraNutr.protein > 0 || extraNutr.water > 0) {
@@ -368,10 +376,7 @@ export const ChatPage: React.FC<ChatPageProps> = ({
       }
 
       // Sync and background save!
-      autoSaveSession(currentSession, finalMessages, {
-        ...sessionNutrition,
-        ...(aiResponse.extractedNutrition || {})
-      });
+      autoSaveSession(currentSession, finalMessages, finalNutrition);
 
     } catch (err) {
       console.error(err);
