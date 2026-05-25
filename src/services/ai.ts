@@ -186,28 +186,28 @@ ${recentContext.length > 0 ? recentContext.map((note, idx) => `Day -${idx + 1}: 
         }
 
         const data = await response.json();
-        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const rawText = data.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') || '';
 
         // Extract JSON log block if present
         let reply = rawText.replace(/\*/g, '');
         let extractedNutrition;
         let extractedWeight;
 
-        const logMatch = rawText.match(/:::LOG_DATA:::(.*):::/);
+        const logMatch = rawText.match(/:::LOG_DATA:::([\\s\\S]*?):::/);
         if (logMatch) {
           try {
             extractedNutrition = JSON.parse(logMatch[1].trim());
-            reply = reply.replace(/:::LOG_DATA:::.*:::/, '').trim();
+            reply = reply.replace(/:::LOG_DATA:::[\s\S]*?:::/, '').trim();
           } catch (e) {
             console.error('Failed to parse nutrition log JSON from AI reply:', e);
           }
         }
 
-        const weightMatch = rawText.match(/:::WEIGHT_LOG:::(.*):::/);
+        const weightMatch = rawText.match(/:::WEIGHT_LOG:::([\\s\\S]*?):::/);
         if (weightMatch) {
           try {
             extractedWeight = parseFloat(weightMatch[1].trim());
-            reply = reply.replace(/:::WEIGHT_LOG:::.*:::/, '').trim();
+            reply = reply.replace(/:::WEIGHT_LOG:::[\s\S]*?:::/, '').trim();
           } catch (e) {
             console.error('Failed to parse weight log from AI reply:', e);
           }
