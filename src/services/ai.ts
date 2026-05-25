@@ -175,7 +175,7 @@ ${recentContext.length > 0 ? recentContext.map((note, idx) => `Day -${idx + 1}: 
               },
               generationConfig: {
                 temperature: 0.3,
-                maxOutputTokens: 800,
+                maxOutputTokens: 2048,
               }
             }),
           }
@@ -193,7 +193,7 @@ ${recentContext.length > 0 ? recentContext.map((note, idx) => `Day -${idx + 1}: 
         let extractedNutrition;
         let extractedWeight;
 
-        const logMatch = rawText.match(/:::LOG_DATA:::([\\s\\S]*?):::/);
+        const logMatch = rawText.match(/:::LOG_DATA:::([\s\S]*?):::/);
         if (logMatch) {
           try {
             extractedNutrition = JSON.parse(logMatch[1].trim());
@@ -203,7 +203,7 @@ ${recentContext.length > 0 ? recentContext.map((note, idx) => `Day -${idx + 1}: 
           }
         }
 
-        const weightMatch = rawText.match(/:::WEIGHT_LOG:::([\\s\\S]*?):::/);
+        const weightMatch = rawText.match(/:::WEIGHT_LOG:::([\s\S]*?):::/);
         if (weightMatch) {
           try {
             extractedWeight = parseFloat(weightMatch[1].trim());
