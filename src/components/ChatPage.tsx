@@ -69,6 +69,8 @@ export const ChatPage: React.FC<ChatPageProps> = ({
       
       // A. If an active session ID was passed (from "Continue" button)
       if (activeSessionId) {
+        if (currentSession?.id === activeSessionId) return; // Prevent re-initializing if already loaded
+        
         const pastSession = chatSessions.find(s => s.id === activeSessionId);
         if (pastSession) {
           setCurrentSession(pastSession);
@@ -112,6 +114,8 @@ export const ChatPage: React.FC<ChatPageProps> = ({
       });
 
       if (todaySession) {
+        if (currentSession?.id === todaySession.id) return; // Prevent re-initializing if already loaded
+        
         setCurrentSession(todaySession);
         setSessionNutrition({
           calories: todaySession.nutrition_data.calories || 0,
