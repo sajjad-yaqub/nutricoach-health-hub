@@ -175,7 +175,10 @@ ${recentContext.length > 0 ? recentContext.map((note, idx) => `Day -${idx + 1}: 
               },
               generationConfig: {
                 temperature: 0.3,
-                maxOutputTokens: 2048,
+                maxOutputTokens: 4096,
+                thinkingConfig: {
+                  thinkingBudget: 0
+                }
               }
             }),
           }
