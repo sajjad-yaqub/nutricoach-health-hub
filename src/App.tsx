@@ -140,6 +140,18 @@ export default function App() {
     }
   };
 
+  const handleSessionUpdate = (updatedSession: ChatSession) => {
+    setChatSessions(prev => {
+      const idx = prev.findIndex(s => s.id === updatedSession.id);
+      if (idx >= 0) {
+        const copy = [...prev];
+        copy[idx] = updatedSession;
+        return copy;
+      }
+      return [updatedSession, ...prev];
+    });
+  };
+
   // ==========================================
   // AUTH SIGN IN & SIGN OUT TRIGGER ACTIONS
   // ==========================================
@@ -277,15 +289,16 @@ export default function App() {
         );
       case 'chat':
         return (
-          <ChatPage
-            profile={profile}
-            goals={goals}
+          <ChatPage 
+            profile={profile} 
+            goals={goals} 
             dailySummaries={dailySummaries}
             chatSessions={chatSessions}
             activeSessionId={activeChatId}
             onNavigateToTab={handleTabNavigation}
             onRefreshData={refreshData}
             onAddToast={addToast}
+            onSessionUpdate={handleSessionUpdate}
           />
         );
       case 'reports':

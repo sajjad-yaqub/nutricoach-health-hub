@@ -13,6 +13,7 @@ interface ChatPageProps {
   onNavigateToTab: (tab: 'dashboard' | 'chat' | 'planner' | 'reports' | 'profile') => void;
   onRefreshData: () => Promise<void>;
   onAddToast: (msg: string, type: 'success' | 'error') => void;
+  onSessionUpdate?: (session: ChatSession) => void;
 }
 
 export const ChatPage: React.FC<ChatPageProps> = ({
@@ -24,6 +25,7 @@ export const ChatPage: React.FC<ChatPageProps> = ({
   onNavigateToTab,
   onRefreshData,
   onAddToast,
+  onSessionUpdate,
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
@@ -100,9 +102,13 @@ export const ChatPage: React.FC<ChatPageProps> = ({
       }
 
       // B. Check if there's already an active session created today
+      const dNow = new Date();
+      const localTodayStr = `${dNow.getFullYear()}-${String(dNow.getMonth()+1).padStart(2,'0')}-${String(dNow.getDate()).padStart(2,'0')}`;
+      
       const todaySession = chatSessions.find(s => {
-        const sDate = new Date(s.created_at || s.started_at).toISOString().split('T')[0];
-        return sDate === todayStr;
+        const sD = new Date(s.created_at || s.started_at);
+        const localSDate = `${sD.getFullYear()}-${String(sD.getMonth()+1).padStart(2,'0')}-${String(sD.getDate()).padStart(2,'0')}`;
+        return localSDate === localTodayStr;
       });
 
       if (todaySession) {
@@ -220,8 +226,15 @@ export const ChatPage: React.FC<ChatPageProps> = ({
         ended_at: new Date().toISOString(),
       };
 
+      // Optimistically push to App.tsx state!
+      if (onSessionUpdate) {
+        onSessionUpdate(updatedSession);
+      }
+
       // 2. Save Session to DB
-      await dbService.saveChatSession(updatedSession);
+      await dbService.saveChatSession(updatedSession).catch(err => {
+        console.error('Background chat save failed:', err);
+      });
 
       // 3. Upsert today's daily summary
       const todayStr = new Date().toISOString().split('T')[0];
